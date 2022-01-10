@@ -79,7 +79,7 @@ const index = () => {
             {Object.keys(langs).map((lang, key) => (
               <>
                 <h1 key={key} className="inline-flex">
-                  <span className="font-bold">{lang}</span>
+                  <span className="font-bold text-slate-800">{lang}</span>
                   <img className="ml-1 w-4" src={`https://raw.githubusercontent.com/devicons/devicon/master/icons/${lang.toLowerCase() == "css" ? "css3" : lang.toLowerCase() == "html" ? "html5" : lang.toLowerCase()}/${lang.toLowerCase() == "css" ? "css3" : lang.toLowerCase() == "html" ? "html5" : lang.toLowerCase()}-original.svg`} />
                 </h1>
               </>
