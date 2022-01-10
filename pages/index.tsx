@@ -73,16 +73,17 @@ const index = () => {
       />
       {Object.keys(langs).length > 0 ? (
         <div>
-          <div className="flex flex-col items-center gap-5 mt-3">
+          <div className="flex flex-row items-center gap-5 mt-3">
+            <div className="flex flex-col gap-y-2">
             {Object.keys(langs).map((lang, key) => (
               <>
-                {/* <h1 key={key}>
+                <h1 key={key} className="inline-flex">
                   <span className="font-bold">{lang}</span>
-                  :&nbsp;
-                  {langs[lang as unknown as number]}
-                </h1> */}
+                  <img className="ml-1 w-4" src={`https://raw.githubusercontent.com/devicons/devicon/master/icons/${lang.toLowerCase() == "css" ? "css3" : lang.toLowerCase() == "html" ? "html5" : lang.toLowerCase()}/${lang.toLowerCase() == "css" ? "css3" : lang.toLowerCase() == "html" ? "html5" : lang.toLowerCase()}-original.svg`} />
+                </h1>
               </>
             ))}
+            </div>
 
             <div>
               <PolarArea data={data} />
