@@ -75,6 +75,7 @@ const index = () => {
         <div>
           <div className="flex flex-row items-center gap-5 mt-3">
             <div className="flex flex-col gap-y-2">
+            <a target="_blank" className="w-4" href={`https://github.com/${user}/${user}`} ><img className="w-4" src="https://simpleicons.org/icons/github.svg" alt="Github Logo" /></a>
             {Object.keys(langs).map((lang, key) => (
               <>
                 <h1 key={key} className="inline-flex">
