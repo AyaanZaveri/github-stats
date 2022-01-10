@@ -1,82 +1,97 @@
-import Head from 'next/head'
+import React, { useState } from "react";
+import axios from "axios";
+import Input from "../components/Input";
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { PolarArea } from "react-chartjs-2";
 
-export default function Home() {
+const index = () => {
+  const [langs, setLangs] = useState([]);
+  const [user, setUser] = useState("");
+  const [repo, setRepo] = useState("");
+
+  const getLangs = (repository: string) => {
+    axios
+      .get(`https://api.github.com/repos/${user}/${repository}/languages`)
+      .then(function (response) {
+        setLangs(response.data);
+      })
+      .catch(function (error) {
+        //console.log(error);
+      });
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    getLangs(repo);
+  };
+
+  ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
+
+  const data = {
+    labels: Object.keys(langs),
+    datasets: [
+      {
+        label: "# of Votes",
+        data: Object.keys(langs).map(
+          (lang, key) => langs[lang as unknown as number]
+        ),
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div className="flex flex-col justify-center items-center gap-y-3 mt-2">
+      <Input
+        repo={repo}
+        setRepo={setRepo}
+        user={user}
+        setUser={setUser}
+        handleSubmit={handleSubmit}
+      />
+      {Object.keys(langs).length > 0 ? (
+        <div>
+          <div className="flex flex-col items-center gap-5 mt-3">
+            {Object.keys(langs).map((lang, key) => (
+              <>
+                {/* <h1 key={key}>
+                  <span className="font-bold">{lang}</span>
+                  :&nbsp;
+                  {langs[lang as unknown as number]}
+                </h1> */}
+              </>
+            ))}
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+            <div>
+              <PolarArea data={data} />
+            </div>
+          </div>
         </div>
-      </main>
-
-      <footer className="flex items-center justify-center w-full h-24 border-t">
-        <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
-        </a>
-      </footer>
+      ) : null}
     </div>
-  )
-}
+  );
+};
+
+export default index;
